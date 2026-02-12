@@ -1,0 +1,24 @@
+# Dependency directories
+node_modules/
+server/node_modules/
+client/node_modules/
+
+# Environment variables (The most important part!)
+.env
+server/.env
+client/.env
+
+# Build directories
+dist/
+client/dist/
+build/
+server/build/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Operating system files
+.DS_Store
+Thumbs.db
