@@ -17,35 +17,34 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // ✅ ADDED: The Register Function
+  // ✅ UPDATED: Register Function using Relative Path
   const register = async (formData) => {
-    // This sends name, email, password, phone, and address to your API
-    const res = await axios.post('http://localhost:5000/api/auth/register', formData);
+    // Changed from http://localhost:5000/api/auth/register to relative path
+    const res = await axios.post('/api/auth/register', formData);
     
-    // If successful, the backend sends back a token and user object
     const { token, user: userData } = res.data;
 
-    // Save to LocalStorage so the user stays logged in on refresh
     localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', token);
     
     setUser(userData);
   };
 
- const login = async (email, password) => {
+  // ✅ UPDATED: Login Function using Relative Path
+  const login = async (email, password) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      // Changed from http://localhost:5000/api/auth/login to relative path
+      const res = await axios.post('/api/auth/login', { email, password });
       
       const { token, user: userData } = res.data;
 
-      // Save the fresh "Admin Badge" to storage
       localStorage.setItem('user', JSON.stringify(userData));
       localStorage.setItem('token', token);
       
       setUser(userData);
-      return res.data; // Return data so your Login.jsx can redirect
+      return res.data; 
     } catch (err) {
-      throw err; // Let the login page handle the error message
+      throw err; 
     }
   };
 
