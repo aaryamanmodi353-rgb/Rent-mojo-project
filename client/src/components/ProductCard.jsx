@@ -10,7 +10,6 @@ const ProductCard = ({ product, refreshProducts }) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // Custom Toast for Delete Confirmation
     toast((t) => (
       <div className="flex flex-col gap-2">
         <span className="font-semibold text-gray-800">Delete {product.name}?</span>
@@ -24,28 +23,24 @@ const ProductCard = ({ product, refreshProducts }) => {
 
   const confirmDelete = async (toastId) => {
     toast.dismiss(toastId);
-    
-    // 1. Get the Admin Badge (Token) from storage
     const token = localStorage.getItem('token');
 
     try {
-      // 2. Add the Token to the Headers so the backend lets you through
-      await axios.delete(`http://localhost:5000/api/products/${product._id}`, {
+      // ✅ FIX: Changed http://localhost:5000/api/products to relative path /api/products
+      await axios.delete(`/api/products/${product._id}`, {
         headers: {
-          'x-auth-token': token // ✅ Matches your backend 'auth' middleware
+          'x-auth-token': token 
         }
       });
       
       toast.success('Product Deleted');
       if (refreshProducts) refreshProducts();
     } catch (err) {
-      // If the backend returns 401 or 403, it will land here
       const errorMsg = err.response?.data?.message || 'Failed to delete';
       toast.error(errorMsg); 
     }
   };
 
-  // ✅ ADD TO CART FUNCTION (Updated to include auth headers)
   const handleAddToCart = async (e) => {
     e.preventDefault(); 
     e.stopPropagation();
@@ -59,13 +54,14 @@ const ProductCard = ({ product, refreshProducts }) => {
     const loadingToast = toast.loading("Adding to cart...");
     
     try {
-      await axios.post('http://localhost:5000/api/cart/add', {
+      // ✅ FIX: Changed http://localhost:5000/api/cart/add to relative path /api/cart/add
+      await axios.post('/api/cart/add', {
         userId: user.id,
         productId: product._id,
         tenure: 3 
       }, {
         headers: {
-          'x-auth-token': token // ✅ Keep cart actions secure too
+          'x-auth-token': token 
         }
       });
       toast.success("Added to Cart!", { id: loadingToast });
@@ -80,7 +76,6 @@ const ProductCard = ({ product, refreshProducts }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden group h-full flex flex-col relative">
-      {/* Image Container */}
       <div className="h-64 overflow-hidden relative bg-gray-100">
         <img
           src={product.image}
@@ -93,7 +88,6 @@ const ProductCard = ({ product, refreshProducts }) => {
           </span>
         </div>
         
-        {/* ✅ DELETE BUTTON (Restricted to Admins) */}
         {user && user.role === 'admin' && (
             <button
               onClick={handleDelete}
@@ -107,7 +101,6 @@ const ProductCard = ({ product, refreshProducts }) => {
         )}
       </div>
 
-      {/* Content */}
       <div className="p-5 flex flex-col flex-grow">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2">
