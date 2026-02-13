@@ -10,12 +10,16 @@ const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Fetch Cart Data
+    // ✅ UPDATED: Fetch Cart Data with relative path and token
     useEffect(() => {
         if (user) {
             const fetchCart = async () => {
                 try {
-                    const res = await axios.get(`http://localhost:5000/api/cart/${user.id}`);
+                    const token = localStorage.getItem('token');
+                    // Changed from localhost to relative path + added headers
+                    const res = await axios.get(`/api/cart/${user.id}`, {
+                        headers: { 'x-auth-token': token }
+                    });
                     setCartItems(res.data.items || []);
                     setLoading(false);
                 } catch (err) {
@@ -28,10 +32,14 @@ const Cart = () => {
         }
     }, [user]);
 
-    // Handle Remove Item
+    // ✅ UPDATED: Handle Remove Item with relative path and token
     const handleRemove = async (productId) => {
         try {
-            await axios.delete(`http://localhost:5000/api/cart/remove/${user.id}/${productId}`);
+            const token = localStorage.getItem('token');
+            // Changed from localhost to relative path + added headers
+            await axios.delete(`/api/cart/remove/${user.id}/${productId}`, {
+                headers: { 'x-auth-token': token }
+            });
             setCartItems(prev => prev.filter(item => item.product._id !== productId));
             toast.success("Item removed");
         } catch (err) {
@@ -40,7 +48,7 @@ const Cart = () => {
         }
     };
 
-    // Calculate Totals
+    // Calculate Totals (Remains the same)
     const totalRent = cartItems.reduce((acc, item) => acc + (item.product?.monthlyRent || 0), 0);
     const totalDeposit = cartItems.reduce((acc, item) => acc + (item.product?.securityDeposit || 0), 0);
 
@@ -68,7 +76,6 @@ const Cart = () => {
                     </div>
                 ) : (
                     <div className="flex flex-col lg:flex-row gap-8">
-                        {/* Cart Items List */}
                         <div className="flex-1 space-y-4">
                             {cartItems.map((item) => (
                                 <div key={item._id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex gap-4 items-center">
@@ -96,7 +103,6 @@ const Cart = () => {
                             ))}
                         </div>
 
-                        {/* Order Summary Box */}
                         <div className="w-full lg:w-96 h-fit bg-white p-6 rounded-xl shadow-sm border border-gray-100 sticky top-24">
                             <h2 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
                             <div className="space-y-3 text-sm text-gray-600">
@@ -117,11 +123,10 @@ const Cart = () => {
                             <button
                                 className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition"
                                 onClick={() => {
-                                    // Navigate to Checkout with cart items
                                     navigate('/checkout', {
                                         state: {
-                                            cartItems: cartItems, // Pass the whole array
-                                            isBulk: true          // Flag to tell Checkout this is a bulk order
+                                            cartItems: cartItems,
+                                            isBulk: true
                                         }
                                     });
                                 }}

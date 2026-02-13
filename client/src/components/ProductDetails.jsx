@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate(); // ✅ Hook must be INSIDE the component
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedTenure, setSelectedTenure] = useState(null);
@@ -12,21 +12,21 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/products/${id}`);
+        // ✅ FIX: Changed http://localhost:5000/api/products to relative path /api/products
+        const res = await axios.get(`/api/products/${id}`);
         setProduct(res.data);
         if (res.data.tenureOptions.length > 0) {
           setSelectedTenure(res.data.tenureOptions[0]);
         }
         setLoading(false);
       } catch (err) {
-        console.error(err);
+        console.error("Product details error:", err);
         setLoading(false);
       }
     };
     fetchProduct();
   }, [id]);
 
-  // ✅ Function must be INSIDE the component
   const handleBookNow = () => {
     if (!selectedTenure) return alert("Please select a tenure!");
     
@@ -68,7 +68,6 @@ const ProductDetails = () => {
           <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Tenure</h3>
             
-            {/* ✅ Corrected Tenure Buttons */}
             <div className="flex gap-4 mb-6">
               {product.tenureOptions.map((months) => (
                 <button
@@ -94,7 +93,6 @@ const ProductDetails = () => {
                 </div>
               </div>
               
-              {/* ✅ Single Book Now Button with Logic */}
               <button 
                 onClick={handleBookNow}
                 className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg"

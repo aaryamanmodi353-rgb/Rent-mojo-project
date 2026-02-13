@@ -28,8 +28,9 @@ const MyOrders = () => {
     if (!userId) return;
 
     try {
+      // ✅ FIX: Changed http://localhost:5000/api/rentals to relative path /api/rentals
       const res = await axios.get(
-        `http://localhost:5000/api/rentals/my-orders/${userId}`, 
+        `/api/rentals/my-orders/${userId}`, 
         getAuthConfig()
       );
       setOrders(res.data);
@@ -61,9 +62,9 @@ const MyOrders = () => {
     const loadingToast = toast.loading("Cancelling order...");
 
     try {
-        // ✅ CRITICAL: Ensure your backend Rental.routes.js has a PUT route for /cancel/:id
+        // ✅ FIX: Changed http://localhost:5000/api/rentals to relative path /api/rentals
         await axios.put(
-          `http://localhost:5000/api/rentals/cancel/${orderId}`, 
+          `/api/rentals/cancel/${orderId}`, 
           {}, 
           getAuthConfig()
         );
@@ -71,14 +72,11 @@ const MyOrders = () => {
         toast.success("Delivery Cancelled", { id: loadingToast });
         fetchOrders(); // Sync state with the database
     } catch (err) {
-        // Log this to see if it's a 404 (Route not found) or 401 (Unauthorized)
         console.error("Cancellation Error Details:", err.response?.data);
         const msg = err.response?.data?.message || "Failed to cancel";
         toast.error(msg, { id: loadingToast });
     }
   };
-
-  // ... (Keep handleMaintenanceRequest, submitPickupSchedule, and handleDeleteHistory as they were)
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">

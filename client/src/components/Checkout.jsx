@@ -90,7 +90,7 @@ const Checkout = () => {
       await new Promise(resolve => setTimeout(resolve, 1500)); // Simulating gateway response
 
       const orderPayload = {
-        userId: user.id || user._id, // Support for different user object structures
+        userId: user.id || user._id,
         userDetails: formData,
         deliveryDate: formData.deliveryDate,
         totalMonthlyRent,
@@ -102,9 +102,9 @@ const Checkout = () => {
         }))
       };
 
-      // ✅ ADDED: Config with Authorization Headers
+      // ✅ FIX: Changed http://localhost:5000/api/rentals to relative path /api/rentals
       await axios.post(
-        'http://localhost:5000/api/rentals', 
+        '/api/rentals', 
         orderPayload, 
         getAuthConfig()
       );
@@ -113,7 +113,6 @@ const Checkout = () => {
       navigate('/my-orders');
     } catch (err) {
       console.error("Checkout Error:", err.response?.data || err.message);
-      // This specifically addresses the red toast in your screenshot
       const errorMsg = err.response?.data?.message || 'Payment Failed. Please try again.';
       toast.error(errorMsg, { id: loadingToast });
     }
@@ -211,11 +210,11 @@ const Checkout = () => {
           <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
               <h3 className="text-lg font-bold mb-4">Confirm Payment</h3>
               <div className="space-y-3 mb-6">
-                 <input name="number" placeholder="Card Number" className="w-full border p-3 rounded-lg" onChange={handleCardChange} />
-                 <div className="grid grid-cols-2 gap-3">
-                     <input name="expiry" placeholder="MM/YY" className="w-full border p-3 rounded-lg" onChange={handleCardChange} />
-                     <input name="cvv" placeholder="CVV" className="w-full border p-3 rounded-lg" onChange={handleCardChange} />
-                 </div>
+                  <input name="number" placeholder="Card Number" className="w-full border p-3 rounded-lg" onChange={handleCardChange} />
+                  <div className="grid grid-cols-2 gap-3">
+                      <input name="expiry" placeholder="MM/YY" className="w-full border p-3 rounded-lg" onChange={handleCardChange} />
+                      <input name="cvv" placeholder="CVV" className="w-full border p-3 rounded-lg" onChange={handleCardChange} />
+                  </div>
               </div>
               <button onClick={handleFinalPayment} className="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700">
                   Pay ₹{totalDueNow}

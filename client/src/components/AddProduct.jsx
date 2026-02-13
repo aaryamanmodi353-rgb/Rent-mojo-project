@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import toast from 'react-hot-toast'; // ✅ Added for better UI notifications
+import toast from 'react-hot-toast';
 
 const AddProduct = () => {
   const navigate = useNavigate();
@@ -22,14 +22,12 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // 1. Retrieve the Admin Token from LocalStorage
     const token = localStorage.getItem('token');
     
-    // 2. Setup the Authorization Header
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        'x-auth-token': token // ✅ This matches your backend middleware requirement
+        'x-auth-token': token 
       }
     };
 
@@ -44,16 +42,14 @@ const AddProduct = () => {
         tenureOptions: [3, 6, 12]
       };
 
-      // 3. Send request with the config (headers) included
-      await axios.post('http://localhost:5000/api/products', payload, config);
+      // ✅ FIX: Changed http://localhost:5000/api/products to relative path /api/products
+      await axios.post('/api/products', payload, config);
       
       toast.success('Product Added Successfully!', { id: loadingToast });
       navigate('/');
     } catch (err) {
       console.error(err);
       const errorMsg = err.response?.data?.message || 'Failed to add product';
-      
-      // ✅ Replaced ugly browser alert with modern Toast
       toast.error(errorMsg, { id: loadingToast });
     }
   };

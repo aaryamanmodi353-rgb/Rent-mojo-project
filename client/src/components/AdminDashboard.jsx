@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const AdminDashboard = () => {
     const [rentals, setRentals] = useState([]);
@@ -8,10 +9,21 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchAllData = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/rentals/all');
+                // 1. Get the Admin Token from LocalStorage
+                const token = localStorage.getItem('token');
+                
+                // 2. Setup headers for the admin-protected route
+                const config = {
+                    headers: {
+                        'x-auth-token': token // ✅ Pass the security check
+                    }
+                };
+
+                // 3. ✅ FIX: Use relative path /api/rentals/all instead of localhost
+                const res = await axios.get('/api/rentals/all', config);
                 setRentals(res.data);
 
-                // Calculate Stats
+                // Calculate Stats (logic remains the same)
                 const totalRevenue = res.data.reduce((acc, curr) => acc + (curr.totalMonthlyRent || 0), 0);
                 const activeOrders = res.data.filter(r => r.status === 'active').length;
 
@@ -22,6 +34,7 @@ const AdminDashboard = () => {
                 });
             } catch (err) {
                 console.error(err);
+                toast.error("Unauthorized: Access Denied");
             }
         };
         fetchAllData();
@@ -87,15 +100,6 @@ const AdminDashboard = () => {
                                             <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold uppercase">
                                                 {rental.status}
                                             </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-sm">
-                                            {rental.pickupStatus === 'scheduled' ? (
-                                                <span className="text-orange-600 font-bold">
-                                                    {new Date(rental.pickupDate).toLocaleDateString()}
-                                                </span>
-                                            ) : (
-                                                <span className="text-gray-400 text-xs">--</span>
-                                            )}
                                         </td>
                                     </tr>
                                 ))}
