@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+// ✅ Change this to a relative path
+// This tells the browser to use the current website's domain
+const API_URL = '/api'; 
 
 export const fetchProducts = async () => {
   try {
