@@ -9,11 +9,6 @@
 Check out the live application deployed on Render:
 **🔗 [Live Site Link Here]**
 
-> **Test Admin Credentials:**
-> * **Email:** `admin@rentmojo.com`
-> * **Password:** `adminpassword123`
-
----
 
 ## 🌟 Key Features
 
