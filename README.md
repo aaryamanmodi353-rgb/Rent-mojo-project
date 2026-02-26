@@ -3,13 +3,6 @@
 
 **Rent Mojo** is a full-stack e-commerce application designed to solve the problem of high upfront costs for furniture and appliances. Built with the **MERN Stack**, it features a seamless rental process, secure authentication, and a robust admin dashboard for inventory management.
 
----
-
-## 🚀 Live Demo
-Check out the live application deployed on Render:
-**🔗 [Live Site Link Here]**
-
-
 ## 🌟 Key Features
 
 ### 🛒 User Features
