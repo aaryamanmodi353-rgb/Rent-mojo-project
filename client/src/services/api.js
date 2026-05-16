@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-// ✅ Change this to a relative path
-// This tells the browser to use the current website's domain
-const API_URL = '/api'; 
+// Use the VITE_API_URL environment variable for production, or fallback to relative/localhost
+const API_URL = import.meta.env.VITE_API_URL || '/api'; 
 
 export const fetchProducts = async () => {
   try {
