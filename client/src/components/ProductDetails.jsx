@@ -12,8 +12,8 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        // ✅ FIX: Changed http://localhost:5000/api/products to relative path /api/products
-        const res = await axios.get(`/api/products/${id}`);
+        const API_BASE = import.meta.env.VITE_API_URL || '/api';
+        const res = await axios.get(`${API_BASE}/products/${id}`);
         setProduct(res.data);
         if (res.data.tenureOptions.length > 0) {
           setSelectedTenure(res.data.tenureOptions[0]);
