@@ -46,7 +46,7 @@ npm install
 cd ..
 3️⃣ Environment VariablesCreate a .env file in the root directory and add the following:Code snippetPORT=5000
 MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=superman
+JWT_SECRET=any_random_secure_string_here
 NODE_ENV=development
 4️⃣ Seed the DatabasePopulate your database with initial products.Bashnpm run seed
 5️⃣ Run the AppRun both backend and frontend concurrently.Bashnpm run dev
